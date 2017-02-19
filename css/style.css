@@ -1,0 +1,43 @@
+.card-placeholder {
+	background: red;
+	//list-style-type: none;
+}
+
+.board {
+	float: left;
+	background-color: whitesmoke;
+	margin: 5px;
+	padding: 10px;
+	border-radius: 15px;
+}
+
+.column-list {
+	padding: 0;
+}
+
+.column-card-list {
+	padding: 0;
+	min-height: 60px;
+}
+
+.column-container {
+	
+	border: 1px solid bisque;
+}
+
+.column {
+	float: left;
+	margin: 10px;
+	background-color: cornsilk;
+	
+}
+
+.column-card-list.ui-sortable {
+	padding: 0;
+}
+
+.card {
+	background-color: ivory;
+	margin: 5px;
+	list-style: none;
+}
