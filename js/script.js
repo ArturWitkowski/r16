@@ -1,5 +1,5 @@
 $(function () {
-	// tutaj trafi cała nasza aplikacja 
+	
 	
 	function randomString () {
 		var chars = '0123456789abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ';
@@ -12,7 +12,7 @@ $(function () {
 	}
 	
 	function Column(name) {
-		var self = this; // przyda się dla funkcji zagnieżdżonych 
+		var self = this;
 		this.id = randomString();
 		this.name = name;
 		this.$element = createColumn();
@@ -77,7 +77,7 @@ $(function () {
 			this.$element.remove(); 
 		}
 	};
-	//////////////////////////////////////////////////////////////////
+	
 	function Board(name) {
 		var self = this; 
 		this.id = randomString();
@@ -85,13 +85,16 @@ $(function () {
 		this.$element = createBoard();
 		
 		function createBoard() {
-			var $board= $('<div>').addClass('board');
+			var $board= $('<div id = ' + self.name + '>').addClass('board');
 			var $boardTitle = $('<h2>').addClass('board-title').text(self.name);
 			var $boardColumnList = $('<ul>').addClass('column-list');
 			var $boardDelete = $('<button>').addClass('btn-delete').text('x'); 
 			var $boardAddColumn = $('<button>').addClass('add-column').text('Dodaj kolumnę');
+			var $boardAddTab = $('#board-container').children('ul').append("<li id=" + self.name + "Tab><a href=#" + self.name + "><span>"+ self.name +"</span></a></li>");
+			
 			
 			$boardDelete.click(function() {
+				$("#"+self.name+"Tab").remove();
 				self.removeBoard();
 			});
 			$boardAddColumn.click(function() {
@@ -117,49 +120,6 @@ $(function () {
 			this.$element.remove();
 		}
 	};
-	///////////////////////////////////////////////////////////////////////
-	
-	/*var board = {
-		name: 'Tablica Kanban',
-		addColumn: function(column) {
-			this.$element.append(column.$element);
-			initSortable(); 
-		},
-		$element: $('#board .column-container')
-	};
-	
-	function initSortable() {
-		$('.column-card-list').sortable({
-			connectWith: '.column-card-list',
-			placeholder: 'card-placeholder'
-		}).disableSelection();
-	}
-	
-	$('.create-column') .click(function(){
-		var name = prompt('Wpisz nazwę kolumny');
-		var column = new Column(name);
-		board.addColumn(column);
-	});
-	
-	
-	// TWORZENIE KOLUMN
-	var todoColumn = new Column('Do zrobienia');
-	var doingColumn = new Column('W trakcie');
-	var doneColumn = new Column('Skończone');
-	
-	// DODAWANIE KOLUMN DO TABLICY
-	board.addColumn(todoColumn);
-	board.addColumn(doingColumn);
-	board.addColumn(doneColumn); 
-	
-	// TWORZENIE NOWYCH EGZEMPLARZY KART
-	var card1 = new Card('Nowe zadanie');
-	var card2 = new Card('Stworzyc tablice kanban');
-	
-	// DODAWANIE KART DO KOLUMN 
-	todoColumn.addCard(card1);
-	doingColumn.addCard(card2);
-		*/
 	
 	function initSortable() {
 		$('.column-card-list').sortable({
@@ -174,18 +134,23 @@ $(function () {
 			this.$element.append(board.$element);
 			initSortable();
 		},
-		$element: $("#main-manu .board-container")
+		$element: $("#main-manu #board-container")
 	};
 	
-	$('.create-board') .click(function(){
+	$('.create-board').click(function(){
 		var name = prompt('Wpisz nazwę kolumny');
 		var board = new Board(name);
 		mainMenu.addBoard(board);
+		tabs.tabs("refresh");
+		
+		var activeTab = $(".ui-tabs-nav li:last").index(); console.log("activ:"+ activeTab);
+		$("#board-container").tabs({active: activeTab});
+		
 	});
 	
 	var developBoard = new Board("Programowanie");
 	var testBoard = new Board("Testy");
-	var implementBoard = new Board("Wdrożenie");
+	var implementBoard = new Board("Wdrozenie");
 	
 	
 	mainMenu.addBoard(developBoard);
@@ -200,9 +165,9 @@ $(function () {
 	developBoard.addColumn(col2);
 	developBoard.addColumn(col3);
 	
-	var col21 = new Column("To do");
-	var col22 = new Column("Doing");
-	var col23 = new Column("Done");
+	var col21 = new Column("Do zrobienia");
+	var col22 = new Column("W realizacji");
+	var col23 = new Column("Zrobione");
 	var col24 = new Column("Archive");
 	
 	testBoard.addColumn(col21);
@@ -224,7 +189,13 @@ $(function () {
 	col2.addCard(card3);
 	col22.addCard(card4);
 	
+	var tabs = $("#board-container").tabs();
 	
+	tabs.on( "click", "span.ui-icon-close", function() {
+      var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
+      $( "#" + panelId ).remove();
+      tabs.tabs( "refresh" );
+    });
 	
 		
 
